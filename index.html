@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Remix</title>
+    <link rel="stylesheet" href="./css/style.css"/>
+</head>
+<body>
+
+
+<section class="introduction">
+    <div id="intro-grid-container">
+        <div class="introduction-card" id="introduction-box">
+           <p>Welcome to this rendition of a simon says remix game! </p>
+           
+           <p>Press "enter" on your keyboard to continue!</p>  
+        </div>
+        <div class="introduction-card" id="instruction-box">
+            <p>For those unfamiliar with Simon Says, here is how you play. 
+            A color will blink and you click the button that blinked. With each turn, 
+            the buttons you have to click stack on each other. Ex: Level 1: button one,
+            Level 2: button 1, button 2, etc.
+    
+           <p>Press "enter" and good luck!</p>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="simon-says-game">
+    <div id="simon-says-grid-container">
+        <div id="simon-says-instructions">
+            <h1>Press "enter" to play!</h1>
+        </div>
+        <div class="background-simon-says-box green">
+            <div class="simon-says-box" id="green-box"></div>
+        </div>
+
+        <div class="background-simon-says-box yellow">
+            <div class="simon-says-box" id="yellow-box"></div>
+        </div>
+
+        <div class="background-simon-says-box red">
+            <div class="simon-says-box" id="red-box"></div>
+        </div>
+
+
+        <div class="background-simon-says-box pink">
+            <div class="simon-says-box" id="pink-box"></div>
+        </div>
+    </div>
+</section>
+
+    
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>  
+<script src="./js/index.js"></script>   
+</body>
+</html>
