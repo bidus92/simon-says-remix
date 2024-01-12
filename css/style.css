@@ -170,11 +170,31 @@ h1
 
 }
 
+@keyframes click
+{
+    0%
+    {
+
+    }
+    50%
+    {
+        background-color: white;
+    }
+}
+
 .the-flash
 {
     animation-name: blink; 
     animation-duration: 1s; 
-    animation-iteration-count: infinite;
+    animation-iteration-count: 2;
+    animation-timing-function: linear;
+}
+
+.the-press
+{
+    animation-name: click;
+    animation-duration: .5s;
+    animation-iteration-count: 1;
     animation-timing-function: linear;
 }
 

@@ -47,12 +47,15 @@ $(document).on("keydown", function(event)
             }, "1000");
         break;
         case 2: 
-            enterCount+=1;
+            
             theNewGame.begin(); 
+            enterCount+=1;
             setTimeout(()=>
             {
+                theNewGame.running = true;
                 theNewGame.run();
             }, "3000"); 
+            
     }
   }  
 });
