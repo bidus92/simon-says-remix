@@ -2,46 +2,34 @@ class NewGame
 {
     constructor()
     {
-        this.level = 1; 
-        this.colors = $(".simon-says-box");
-        this.startColor = (Math.floor(Math.random() * 4));
-        this.newColor = 0; 
-        this.colorBuffer = [];
-        this.reroll = ()=>
-        {
-            this.newColor = (Math.floor(Math.random() * 4));
-            return this.newColor; 
-        }
-        
-        this.gameInMotion = false;
-        this.begin = ()=>
-        {
-            this.colorBuffer.push(this.startColor);
-
-            $("#simon-says-instructions").text("3");
-        
-            setTimeout(()=>
+       this.level = 1; 
+       this.AllColors = [$("#green-box"), $("#yellow-box"), $("#red-box"), $("#pink-box")];
+       this.startColor = (Math.floor(Math.random() * 4));
+       this.previousLength = 0; 
+       this.newColor = 0; 
+       this.colorBuffer = [this.startColor];
+       this.running = false;
+       this.reroll = function()
+       {
+           this.newColor = (Math.floor(Math.random() * 4));
+           return this.newColor; 
+       }
+       this.begin = function ()
+       {
+           $("#simon-says-instructions").text("3");
+            setTimeout(function ()
             {
-            $("#simon-says-instructions").text("2");
-            },"1000");
-
-            setTimeout(()=>
+                $("#simon-says-instructions").text("2");
+            }, "1000");
+            setTimeout(function ()
             {
-            $("#simon-says-instructions").text("1");
+                $("#simon-says-instructions").text("1");
             },"2000");
-
-            setTimeout(()=>
-            {
-               this.run();
-            },"3000");
-        
         }
-
-        this.run = ()=>
-        {  
-            $("#simon-says-instructions").text("Level " + this.level);
-            $(this.colors[0]).addClass("flash");
-         
-        }   
+        this.run = function ()
+        {
+               $("#simon-says-instructions").text("level "+ this.level);
+               this.AllColors[2].addClass("the-flash");    
+        }    
     }
 }

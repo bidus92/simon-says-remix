@@ -156,7 +156,7 @@ h1
 
 
 
-@keyframes flash
+@keyframes blink
 {
     0%
     {
@@ -170,11 +170,11 @@ h1
 
 }
 
-.flash
+.the-flash
 {
-    animation-name: flash; 
+    animation-name: blink; 
     animation-duration: 1s; 
-    animation-iteration-count: 1;
+    animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
 
