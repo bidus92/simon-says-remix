@@ -93,15 +93,30 @@ h1
     margin-left: 45px;
 }
 
-
-#simon-says-instructions
+.simon-says-instrucion-flex
 {
     grid-area: 1/1/1/6; 
+    display: flex; 
+    justify-content: center;
+    align-content: center;
+    margin-left: 100px;
+    gap: 50px;  
+}
+
+#timer
+{
+    
+    font-size: 24px;
+}
+#simon-says-instructions
+{
     text-align: center;
     color: white;
-    font-size: 3rem;
+    font-size: 2rem;
 
 }
+
+
 
 .simon-says-box
 {
@@ -186,7 +201,7 @@ h1
 {
     animation-name: blink; 
     animation-duration: 1s; 
-    animation-iteration-count: 2;
+    animation-iteration-count: 1;
     animation-timing-function: linear;
 }
 

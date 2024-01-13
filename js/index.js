@@ -47,12 +47,10 @@ $(document).on("keydown", function(event)
             }, "1000");
         break;
         case 2: 
-            
-            theNewGame.begin(); 
             enterCount+=1;
+            theNewGame.begin();
             setTimeout(()=>
             {
-                theNewGame.running = true;
                 theNewGame.run();
             }, "3000"); 
             
