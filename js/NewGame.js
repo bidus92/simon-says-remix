@@ -11,15 +11,15 @@ class NewGame
        this.level = 1; 
        this.colors = $(".simon-says-box");
        this.allColors = [$("#green-box"), $("#yellow-box"), $("#red-box"), $("#pink-box")];
-       this.startColor = (Math.floor(Math.random() * 4));
+       this.startColor = Math.floor(Math.random() * 4);
        this.newColor = 0; 
        this.colorIndex = 0; 
-       this.colorBuffer = [this.startColor, 2];
+       this.colorBuffer = [this.startColor];
        this.running = false;
 
        this.reroll = function()
        {
-           var theNewColor = (Math.floor(Math.random() * 4));
+           var theNewColor = Math.floor(Math.random() * 4);
            return theNewColor; 
        }
        this.checkForWin = function()
@@ -27,12 +27,28 @@ class NewGame
            this.levelWon = true; 
        }
 
-
+       this.flash = function(x)
+       {
+            this.allColors[this.colorBuffer[x]].addClass("the-flash");
+            setTimeout(()=>
+            {
+                this.allColors[this.colorBuffer[x]].removeClass("the-flash");  
+            }, "1000");
+       }
 
        this.theLevel = function (x)
        {
-            this.allColors[x].addClass("the-flash");     
-       }    
+            if(x < this.colorBuffer.length)
+            {
+                this.flash(x);
+                this.colorIndex++; 
+            }
+            else
+            {
+                this.colorIndex = 0;
+            }
+                
+        } 
         
 
        this.verdict = ()=>
@@ -44,7 +60,7 @@ class NewGame
                 this.levelUp();
                 this.newColor = this.reroll()
                 this.colorBuffer.push(this.newColor)
-                this.colorIndex++; 
+                this.colorIndex = 0; 
                 this.timer.resetTimer();  
             }
             else
@@ -53,7 +69,7 @@ class NewGame
                 clearInterval(this.levelUpIntervalID); 
                 clearInterval(this.mainGameLoopIntervalID); 
             }     
-         }, "7000")           
+         }, "10000")           
        }
 
        this.levelUp = ()=>
@@ -67,7 +83,10 @@ class NewGame
             this.mainGameLoopIntervalID = setInterval(()=>
             {
                     $("#simon-says-instructions").text("level " + this.level);
+                    
+    
                     this.theLevel(this.colorIndex);
+                    
                     this.timer.runTimer();
                     //set timeout for timer count
             }, "1000");   

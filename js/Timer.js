@@ -2,7 +2,7 @@ class Timer
 {
     constructor()
     {
-        this.timeCount = 7; 
+        this.timeCount = 10; 
         this.timesUp = false; 
         this.runTimer = ()=>
         {
@@ -20,7 +20,7 @@ class Timer
 
         this.resetTimer = ()=>
         {
-            this.timeCount = 7; 
+            this.timeCount = 10; 
         }
 
         this.stopTimer = ()=>
