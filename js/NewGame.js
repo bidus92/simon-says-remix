@@ -5,6 +5,7 @@ class NewGame
        //intervalIDs
        this.levelIntervalID; 
        this.levelUpIntervalID; 
+       this.levelShown = false; 
        this.mainGameLoopIntervalID; 
        this.levelWon = true; //Bool to determine level win
        this.timer = new Timer(); 
@@ -33,7 +34,7 @@ class NewGame
             setTimeout(()=>
             {
                 this.allColors[this.colorBuffer[x]].removeClass("the-flash");  
-            }, "1000");
+            }, "500");
        }
 
        this.theLevel = function (x)
@@ -46,6 +47,7 @@ class NewGame
             else
             {
                 this.colorIndex = 0;
+                this.levelShown = true;
             }
                 
         } 
@@ -62,6 +64,7 @@ class NewGame
                 this.colorBuffer.push(this.newColor)
                 this.colorIndex = 0; 
                 this.timer.resetTimer();  
+                this.levelShown = false;
             }
             else
             {
@@ -84,9 +87,10 @@ class NewGame
             {
                     $("#simon-says-instructions").text("level " + this.level);
                     
-    
-                    this.theLevel(this.colorIndex);
-                    
+                    if(!this.levelShown)
+                    {
+                        this.theLevel(this.colorIndex);
+                    }
                     this.timer.runTimer();
                     //set timeout for timer count
             }, "1000");   
