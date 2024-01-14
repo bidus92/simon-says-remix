@@ -1,3 +1,10 @@
+function TheColor(color) 
+{
+    this.color  = color; 
+    this.boxClicked = false; 
+}
+
+
 class NewGame
 {
     constructor()
@@ -5,13 +12,13 @@ class NewGame
        //intervalIDs
        this.levelIntervalID; 
        this.levelUpIntervalID; 
-       this.levelShown = false; 
        this.mainGameLoopIntervalID; 
+       this.levelShown = false; 
        this.levelWon = true; //Bool to determine level win
        this.timer = new Timer(); 
        this.level = 1; 
        this.colors = $(".simon-says-box");
-       this.allColors = [$("#green-box"), $("#yellow-box"), $("#red-box"), $("#pink-box")];
+       this.allColors = [new TheColor($("#green-box")), new TheColor($("#yellow-box")), new TheColor($("#red-box")), new TheColor($("#pink-box"))];
        this.startColor = Math.floor(Math.random() * 4);
        this.newColor = 0; 
        this.colorIndex = 0; 
@@ -23,20 +30,38 @@ class NewGame
            var theNewColor = Math.floor(Math.random() * 4);
            return theNewColor; 
        }
-       this.checkForWin = function()
-       {
-           this.levelWon = true; 
-       }
 
-       this.flash = function(x)
+       //function that plays out if click event took place 
+       this.boxClicked = (x)=>
        {
-            this.allColors[this.colorBuffer[x]].addClass("the-flash");
+            this.allColors[x].boxClicked = true; 
+            this.allColors[x].color.addClass("the-press");
             setTimeout(()=>
             {
-                this.allColors[this.colorBuffer[x]].removeClass("the-flash");  
+                this.allColors[x].color.removeClass("the-press");  
+            }, "50");
+        }
+       
+       //was the appropriate box clicked
+       this.checkForClicks = function(x)
+       {
+            if(!this.allColors[x].boxClicked)
+            {
+                this.allColors[x].color.on("click", this.boxClicked(x));
+            }
+       }
+       
+       //the indicator of what to press
+       this.flash = function(x)
+       {
+            this.allColors[this.colorBuffer[x]].color.addClass("the-flash");
+            setTimeout(()=>
+            {
+                this.allColors[this.colorBuffer[x]].color.removeClass("the-flash");  
             }, "500");
        }
-
+       
+       //the level logic
        this.theLevel = function (x)
        {
             if(x < this.colorBuffer.length)
@@ -48,11 +73,10 @@ class NewGame
             {
                 this.colorIndex = 0;
                 this.levelShown = true;
-            }
-                
+            }  
         } 
         
-
+       //Did the player win? 
        this.verdict = ()=>
        {
          this.levelUpIntervalID = setInterval(()=>
@@ -80,13 +104,12 @@ class NewGame
          this.level++; 
        }
        
-       //level incrememt logic
+       //main game loop
        this.mainGameLoop = function ()
        { 
             this.mainGameLoopIntervalID = setInterval(()=>
             {
                     $("#simon-says-instructions").text("level " + this.level);
-                    
                     if(!this.levelShown)
                     {
                         this.theLevel(this.colorIndex);
