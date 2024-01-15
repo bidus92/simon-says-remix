@@ -1,7 +1,24 @@
 function TheColor(color) 
 {
-    this.color  = color; 
-    this.boxClicked = false; 
+    this.color  = color; //color being highlighted
+    this.boxClicked = false; //bool to activate/deactivate animation
+    this.clickCount = 0; //used to track nmber of clicks
+
+    //function that plays out if click event took place 
+    this.boxClickAnimation = ()=>
+    {
+        this.color.addClass("the-press");
+        setTimeout(()=>
+        {
+            this.color.removeClass("the-press");  
+        }, "50");   
+         
+    }
+
+    this.activateAnimation = ()=>
+    {
+        this.color.on("click", this.boxClickAnimation)
+    }
 }
 
 
@@ -30,26 +47,24 @@ class NewGame
            var theNewColor = Math.floor(Math.random() * 4);
            return theNewColor; 
        }
+       
 
-       //function that plays out if click event took place 
-       this.boxClicked = (x)=>
-       {
+        this.boxClicked = (x)=>
+        {
             this.allColors[x].boxClicked = true; 
-            this.allColors[x].color.addClass("the-press");
-            setTimeout(()=>
+            this.allColors[x].clickCount++; 
+            console.log(this.allColors[x].color + "has been clicked " + this.allColors[x].clickCount + " times.");
+        }
+
+        //sets bools to false
+        this.resetBoxClicks = ()=>
+        {
+            for(var x = 0; x < this.allColors.length; x++)
             {
-                this.allColors[x].color.removeClass("the-press");  
-            }, "50");
+                this.allColors[x].boxClicked = false; 
+            }
         }
        
-       //was the appropriate box clicked
-       this.checkForClicks = function(x)
-       {
-            if(!this.allColors[x].boxClicked)
-            {
-                this.allColors[x].color.on("click", this.boxClicked(x));
-            }
-       }
        
        //the indicator of what to press
        this.flash = function(x)
@@ -138,9 +153,14 @@ class NewGame
         
         this.run = function ()
         {
+            
             if(this.running)
             {
                 this.mainGameLoop(); 
+                for(var x = 0; x < this.allColors.length; x++)
+                {
+                    this.allColors[x].activateAnimation();
+                }
                 this.verdict(); 
             }
             else

@@ -50,10 +50,17 @@ $(document).on("keydown", function(event)
             enterCount+=1;
             theNewGame.begin();
             setTimeout(()=>
-            {
+            {   
                 theNewGame.run();
             }, "3000"); 
-            
     }
   }  
 });
+
+
+
+
+
+
+
+
