@@ -1,26 +1,68 @@
-function TheColor(color) 
+var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
+var outOfOrder = false; //global outOfOrder variable 
+
+//NOTE: FUNCTION CALLBACK DOESN'T WORK TO TRIGGER GAME OVER FUNCTION 
+//BECAUSE IT IS A PART OF THE NEW GAME FUNCTION NOT THE COLOR BOX FUNCTION
+//IN OTHER WORDS, THEY AREN'T CONNECTED AND RESULTS IN AN EMPTY CALL
+//
+function TheColor(color, colorIndex) 
 {
+    this.theColorIndex = colorIndex;
     this.color  = color; //color being highlighted
-    this.boxClicked = false; //bool to activate/deactivate animation
-    this.clickCount = 0; //used to track nmber of clicks
+    this.order = []; //tracks real order of the squares to hit
+    this.orderClicked = []; //tracks the actual order of boxes clicked
+
+    this.trackTheClicks = ()=>
+    { 
+      if(!outOfOrder)
+      {
+        this.orderClicked.push(theClicks);
+        console.log("We are at " + theClicks + " clicks");
+        theClicks++;    
+        this.checkTheClick(); 
+      }
+       
+    }
+
+    this.resetClicks = ()=>
+    {
+        this.orderClicked = [];
+    }
+
+    this.checkTheClick = ()=>
+    {
+        for(var x = 0; x < this.order.length + 1; x++)
+        {
+            if(this.orderClicked[x] != this.order[x] && !outOfOrder)
+            {
+                console.log("THIS IS OUT OF ORDER!");
+                outOfOrder = true; 
+                break; 
+            }
+        }
+    }
+
+    
 
     //function that plays out if click event took place 
-    this.boxClickAnimation = ()=>
+    this.boxClick = ()=>
     {
-        this.color.addClass("the-press");
-        setTimeout(()=>
+        if(!outOfOrder)
         {
-            this.color.removeClass("the-press");  
-        }, "50");   
-         
+            this.color.addClass("the-press");
+            setTimeout(()=>
+            {
+                this.color.removeClass("the-press");  
+            }, "50");   
+        }
     }
 
     this.activateAnimation = ()=>
     {
-        this.color.on("click", this.boxClickAnimation)
+        this.color.on("click", this.trackTheClicks);
+        this.color.on("click", this.boxClick);
     }
 }
-
 
 class NewGame
 {
@@ -39,31 +81,27 @@ class NewGame
        this.startColor = Math.floor(Math.random() * 4);
        this.newColor = 0; 
        this.colorIndex = 0; 
+       this.clickOrder = 0; 
        this.colorBuffer = [this.startColor];
        this.running = false;
-
        this.reroll = function()
        {
            var theNewColor = Math.floor(Math.random() * 4);
            return theNewColor; 
        }
        
-
-        this.boxClicked = (x)=>
+        //adds numerical click order of boxes: logic should be if click count doesn't match, we donezo
+        this.setBoxOrder = (x)=>
         {
-            this.allColors[x].boxClicked = true; 
-            this.allColors[x].clickCount++; 
-            console.log(this.allColors[x].color + "has been clicked " + this.allColors[x].clickCount + " times.");
-        }
-
-        //sets bools to false
-        this.resetBoxClicks = ()=>
-        {
-            for(var x = 0; x < this.allColors.length; x++)
+            if(!this.allColors[this.colorBuffer[x]].order.includes(x + 1))
             {
-                this.allColors[x].boxClicked = false; 
+                this.allColors[this.colorBuffer[x]].order.push(x + 1); 
             }
         }
+
+
+//track clicks through boolean, and if the bool is true, 
+//then that click index is added to order clicked. If the order clicked and order don't match...game over SON!
        
        
        //the indicator of what to press
@@ -82,6 +120,7 @@ class NewGame
             if(x < this.colorBuffer.length)
             {
                 this.flash(x);
+                this.setBoxOrder(x);
                 this.colorIndex++; 
             }
             else
@@ -90,14 +129,24 @@ class NewGame
                 this.levelShown = true;
             }  
         } 
+
+        this.resetTheClicks = ()=>
+        {
+            theClicks = 1; 
+        }
         
        //Did the player win? 
        this.verdict = ()=>
        {
          this.levelUpIntervalID = setInterval(()=>
          {
-            if(!this.timer.timesUp && this.levelWon)
+            if(!outOfOrder && !this.timer.timesUp && this.levelWon)
             {
+                for(var x = 0; x < this.allColors.length; x++)
+                {
+                    this.allColors[x].resetClicks(); 
+                }
+                this.resetTheClicks(); 
                 this.levelUp();
                 this.newColor = this.reroll()
                 this.colorBuffer.push(this.newColor)
@@ -110,6 +159,7 @@ class NewGame
                 this.running = false; 
                 clearInterval(this.levelUpIntervalID); 
                 clearInterval(this.mainGameLoopIntervalID); 
+                $("#simon-says-instructions").text("Game Over");
             }     
          }, "10000")           
        }
@@ -151,23 +201,30 @@ class NewGame
            },"2000");
         }
         
+
         this.run = function ()
         {
-            
             if(this.running)
             {
                 this.mainGameLoop(); 
                 for(var x = 0; x < this.allColors.length; x++)
                 {
                     this.allColors[x].activateAnimation();
+                    if(outOfOrder)
+                    {
+                        this.running = false; 
+                        clearInterval(this.levelUpIntervalID); 
+                        clearInterval(this.mainGameLoopIntervalID); 
+                        $("#simon-says-instructions").text("Game Over");
+                        break;
+                    }
                 }
-                this.verdict(); 
+                if(!outOfOrder)
+                {
+                    this.verdict(); 
+                }
+                
             }
-            else
-            {
-                alert("Game Over");
-            }
-            
         }
     }
 }
