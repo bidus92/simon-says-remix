@@ -8,7 +8,7 @@ $("#instruction-box").hide();
 
 
 
-
+//the enter 
 var enterCount = 0; 
 
 const theNewGame = new NewGame();

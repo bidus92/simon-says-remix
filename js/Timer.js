@@ -1,3 +1,4 @@
+
 class Timer
 {
     constructor()
@@ -8,13 +9,15 @@ class Timer
         {
             this.showTimer(); 
             $("#timer").text("Time Remaining: " + this.timeCount);
-            if(this.timeCount > 0)
+            if(this.timeCount >= 0 && !outOfOrder)
             {
                 this.timeCount--; 
             }
             else
             {
                 this.stopTimer();
+                this.hideTimer(); 
+                $("#simon-says-instructions").text("Game Over!");
             }
         }
 
