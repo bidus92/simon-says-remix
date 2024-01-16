@@ -124,7 +124,7 @@ class NewGame
        this.colorIndex = 0; 
        this.colorBuffer = [this.startColor];
        this.running = false;
-
+       this.skipVerdict = false; 
 
        //functions!!
        //when game over takes place
@@ -139,7 +139,7 @@ class NewGame
             clearInterval(this.levelUpIntervalID); 
             clearInterval(this.mainGameLoopIntervalID); 
        }
-       this.reroll = function()
+       this.reroll = ()=>
        {
            var theNewColor = Math.floor(Math.random() * 4);
            return theNewColor; 
@@ -169,6 +169,15 @@ this.checkBoxes = ()=>
         }
     }
 }
+
+this.levelWon = ()=>
+{
+    if(theClicks > this.level && !outOfOrder)
+    {
+        this.skipVerdict = true; 
+        this.levelUp(); 
+    }
+}
        
        //the indicator of what to press
        this.flash = function(x)
@@ -180,7 +189,7 @@ this.checkBoxes = ()=>
                 setTimeout(()=>
                 {
                     this.allColors[this.colorBuffer[x]].color.removeClass("the-flash");  
-                }, "100");
+                }, "500");
             }
        }
        
@@ -210,6 +219,12 @@ this.checkBoxes = ()=>
        {
          this.levelUpIntervalID = setInterval(()=>
          {
+            if(this.skipVerdict)
+            {
+                this.skipVerdict = false; 
+                return; 
+            }
+
             this.checkBoxes(); 
 
             if(allBoxesChecked)
@@ -254,6 +269,7 @@ this.checkBoxes = ()=>
                         this.theLevel(this.colorIndex);
                     }
                     this.timer.runTimer();
+                    this.levelWon();
                     //set timeout for timer count
             }, "1000");   
        }

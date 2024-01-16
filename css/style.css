@@ -174,7 +174,7 @@ h1
     {
        
     }
-    25%
+    45%
     {
        background-color: black;
     }
@@ -195,7 +195,7 @@ h1
 .the-flash
 {
     animation-name: blink; 
-    animation-duration: 0.1s; 
+    animation-duration: .5s; 
     animation-iteration-count: 1;
     animation-timing-function: linear;
 }
