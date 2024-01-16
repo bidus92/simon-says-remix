@@ -59,6 +59,17 @@ $(document).on("keydown", function(event)
 
 
 
+//Mobile Switches
+let width = screen.availWidth;
+
+if(width <= 430)
+{
+   $(".press-command-1").text("Tap the screen to continue!");
+   $(".press-command-2").text("Tap the screen and good luck!");
+}
+
+
+
 
 
 

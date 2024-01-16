@@ -1,6 +1,6 @@
 var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
 var outOfOrder = false; //global outOfOrder variable
-
+var allBoxesChecked = false; //global bool that if all boxes are checked then clock stops and alls well; 
 
 function TheColor(color, colorIndex) 
 {
@@ -8,6 +8,7 @@ function TheColor(color, colorIndex)
     this.color  = color; //color being highlighted
     this.order = []; //tracks real order of the squares to hit
     this.orderClicked = []; //tracks the actual order of boxes clicked
+    this.boxChecked = true; 
     this.assignSound = (colorIndex)=>
     {
         switch(colorIndex)
@@ -79,7 +80,6 @@ function TheColor(color, colorIndex)
         return this.orderClicked;
     }
 
-    
 
     //function that plays out if click event took place 
     this.boxClick = ()=>
@@ -111,7 +111,6 @@ class NewGame
        this.levelUpIntervalID; 
        this.mainGameLoopIntervalID; 
        this.levelShown = false; 
-       this.levelWon = true; //Bool to determine level win
        this.timer = new Timer(); 
        this.level = 1; 
        this.colors = $(".simon-says-box");
@@ -128,6 +127,7 @@ class NewGame
        this.gameOver = ()=>
        {
             $("#simon-says-instructions").text("Game Over!");
+            this.timer.hideTimer(); 
             this.running = false; 
             clearInterval(this.levelUpIntervalID); 
             clearInterval(this.mainGameLoopIntervalID); 
@@ -150,17 +150,35 @@ class NewGame
 
 //track clicks through boolean, and if the bool is true, 
 //then that click index is added to order clicked. If the order clicked and order don't match...game over SON!
-       
+this.checkBoxes = ()=>
+{
+    for(var x = 0; x < this.allColors.length; x++)
+    {
+        if(this.allColors[x].boxChecked && theClicks <= 1)
+        {
+            outOfOrder = true; 
+            allBoxesChecked = false; 
+            break;
+        }
+        else 
+        {
+            allBoxesChecked = true; 
+        }
+    }
+}
        
        //the indicator of what to press
        this.flash = function(x)
        {
-            this.setBoxOrder(x);
-            this.allColors[this.colorBuffer[x]].color.addClass("the-flash");
-            setTimeout(()=>
+            if(!outOfOrder)
             {
-                this.allColors[this.colorBuffer[x]].color.removeClass("the-flash");  
-            }, "100");
+                this.setBoxOrder(x);
+                this.allColors[this.colorBuffer[x]].color.addClass("the-flash");
+                setTimeout(()=>
+                {
+                    this.allColors[this.colorBuffer[x]].color.removeClass("the-flash");  
+                }, "100");
+            }
        }
        
        //the level logic
@@ -189,7 +207,13 @@ class NewGame
        {
          this.levelUpIntervalID = setInterval(()=>
          {
-            if(!outOfOrder && !this.timer.timesUp && this.levelWon)
+            this.checkBoxes(); 
+
+            if(allBoxesChecked)
+            {
+                this.timer.timesUp = false; 
+            }
+            if(!outOfOrder && !this.timer.timesUp)
             {
                 this.levelUp(); 
             }
@@ -198,7 +222,7 @@ class NewGame
                 this.gameOver(); 
                 
             }     
-         }, "10000")           
+         }, "11000")           
        }
 
        this.levelUp = ()=>
@@ -221,7 +245,7 @@ class NewGame
        { 
             this.mainGameLoopIntervalID = setInterval(()=>
             {
-                    $("#simon-says-instructions").text("level " + this.level);
+                    $("#simon-says-instructions").text("Level " + this.level);
                     if(!this.levelShown)
                     {
                         this.theLevel(this.colorIndex);
