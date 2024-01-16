@@ -11,28 +11,30 @@ class Timer
             $("#timer").text("Time Remaining: " + this.timeCount);
             if(this.timeCount >= 0 && !outOfOrder)
             {
+                console.log(this.timeCount);
                 this.timeCount--; 
             }
             else
             {
-
                 this.hideTimer(); 
                 this.stopTimer();
             }
         }
 
-        this.resetTimer = ()=>
+        this.resetTimer = (count)=>
         {
-            this.timeCount = 10; 
+            this.timeCount = count; 
         }
 
         this.stopTimer = ()=>
         {
             this.timesUp = true;
             $("#timer").css("color", "black");
+            $("body").css("background", "red");
             $("#simon-says-instructions").css("color", "black"); 
             $(".background-simon-says-box").css("background", "black");
             $("#simon-says-instructions").text("Game Over!");
+            
         }
 
         this.hideTimer = ()=>

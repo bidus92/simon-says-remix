@@ -1,6 +1,5 @@
 var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
 var outOfOrder = false; //global outOfOrder variable
-var allBoxesChecked = true; //global bool that if all boxes are checked then clock stops and alls well; 
 
 function TheColor(color, colorIndex) 
 {
@@ -8,7 +7,6 @@ function TheColor(color, colorIndex)
     this.color  = color; //color being highlighted
     this.order = []; //tracks real order of the squares to hit
     this.orderClicked = []; //tracks the actual order of boxes clicked
-    this.boxChecked = true; 
     this.assignSound = (colorIndex)=>
     {
         switch(colorIndex)
@@ -124,8 +122,7 @@ class NewGame
        this.colorIndex = 0; 
        this.colorBuffer = [this.startColor];
        this.running = false;
-       this.skipVerdict = false; 
-
+       this.newDifficulty = true; 
        //functions!!
        //when game over takes place
        this.gameOver = ()=>
@@ -155,33 +152,17 @@ class NewGame
         }
 
 
-//track clicks through boolean, and if the bool is true, 
-//then that click index is added to order clicked. If the order clicked and order don't match...game over SON!
-this.checkBoxes = ()=>
-{
-    for(var x = 0; x < this.allColors.length; x++)
-    {
-        if(this.allColors[x].boxChecked && theClicks <= 1)
+        this.levelWon = ()=>
         {
-            outOfOrder = true; 
-            allBoxesChecked = false; 
-            break;
+            if(theClicks > this.level && !outOfOrder)
+            {
+                this.levelUp(); 
+            }
         }
-    }
-}
-
-this.levelWon = ()=>
-{
-    if(theClicks > this.level && !outOfOrder)
-    {
-        this.skipVerdict = true; 
-        this.levelUp(); 
-    }
-}
-       
-       //the indicator of what to press
-       this.flash = function(x)
-       {
+            
+        //the indicator of what to press
+        this.flash = function(x)
+        {
             if(!outOfOrder)
             {
                 this.setBoxOrder(x);
@@ -191,14 +172,14 @@ this.levelWon = ()=>
                     this.allColors[this.colorBuffer[x]].color.removeClass("the-flash");  
                 }, "500");
             }
-       }
-       
-       //the level logic
-       this.theLevel = function (x)
-       {
+        }
+            
+        //the level logic
+        this.theLevel = function (x)
+        {
             if(x < this.colorBuffer.length)
             {
-                this.flash(x);
+            this.flash(x);
                 this.colorIndex++; 
             }
             else
@@ -214,37 +195,21 @@ this.levelWon = ()=>
             return theClicks; 
         }
         
-       //Did the player win? 
-       this.verdict = ()=>
-       {
-         this.levelUpIntervalID = setInterval(()=>
-         {
-            if(this.skipVerdict)
-            {
-                this.skipVerdict = false; 
-                return; 
-            }
-
-            this.checkBoxes(); 
-
-            if(allBoxesChecked)
-            {
-                this.timer.timesUp = false; 
-            }
-            if(!outOfOrder && !this.timer.timesUp)
-            {
-                this.levelUp(); 
-            }
-            else
-            {
-                this.gameOver(); 
-                
-            }     
-         }, "11000")           
-       }
 
        this.levelUp = ()=>
        {
+            if(this.level >= 8 && this.newDifficulty)
+            { 
+                 this.enterNewDifficulty();
+            }
+            else if(this.level >= 8 && !this.newDifficulty)
+            {
+                this.timer.resetTimer(15);
+            }
+            else
+            {
+                this.timer.resetTimer(10);
+            }
             for(var x = 0; x < this.allColors.length; x++)
             {
                 this.allColors[x].resetClicks(); 
@@ -253,9 +218,14 @@ this.levelWon = ()=>
             this.newColor = this.reroll()
             this.colorBuffer.push(this.newColor)
             this.level++;
-            this.colorIndex = 0; 
-            this.timer.resetTimer();  
+            this.colorIndex = 0;  
             this.levelShown = false;
+       }
+
+       this.enterNewDifficulty = ()=>
+       {
+                this.timer.resetTimer(15); 
+                this.newDifficulty = false; 
        }
        
        //main game loop
@@ -265,10 +235,14 @@ this.levelWon = ()=>
             {
                     $("#simon-says-instructions").text("Level " + this.level);
                     if(!this.levelShown)
-                    {
+                    { 
                         this.theLevel(this.colorIndex);
                     }
-                    this.timer.runTimer();
+                    else
+                    {
+                        this.timer.runTimer();
+                    }
+                    
                     this.levelWon();
                     //set timeout for timer count
             }, "1000");   
@@ -305,8 +279,7 @@ this.levelWon = ()=>
                         this.gameOver(); 
                         break;
                     }
-                }
-                    this.verdict();       
+                }  
             }
         }
     }
