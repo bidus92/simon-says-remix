@@ -179,7 +179,7 @@ class NewGame
         {
             if(x < this.colorBuffer.length)
             {
-            this.flash(x);
+                this.flash(x);
                 this.colorIndex++; 
             }
             else
@@ -236,6 +236,7 @@ class NewGame
                     $("#simon-says-instructions").text("Level " + this.level);
                     if(!this.levelShown)
                     { 
+                        this.timer.hideTimer(); 
                         this.theLevel(this.colorIndex);
                     }
                     else
