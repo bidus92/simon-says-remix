@@ -39,9 +39,19 @@ function TheColor(color, colorIndex)
     { 
       if(!outOfOrder)
       {
+        console.log("There are currently " + theClicks + " clicks");
         this.orderClicked.push(theClicks);
-        theClicks++;    
-        this.checkTheClick(); 
+        setTimeout(()=>
+        {
+            theClicks++;
+        }, "25");
+        
+        console.log("Clicks incremented to " + theClicks + " clicks");
+        setTimeout(()=>
+        {
+            this.checkTheClick(); 
+        }, "50");
+        
       }
        
     }
@@ -49,10 +59,11 @@ function TheColor(color, colorIndex)
 
     this.checkTheClick = ()=>
     {
-        for(var x = 0; x < this.order.length + 1; x++)
+        for(var x = 0; x < this.orderClicked.length; x++)
         {
             if(this.orderClicked[x] != this.order[x] && !outOfOrder)
             {
+                console.log("Order Clicked is " + this.orderClicked[x] + " and the order is " + this.order[x]);
                 this.audio = new Audio("../assets/sounds/wrong.mp3");
                 this.playSound();
                 outOfOrder = true; 
@@ -64,6 +75,8 @@ function TheColor(color, colorIndex)
     this.resetClicks = ()=>
     {
         this.orderClicked = [];
+        console.log("There are order clicked is reset " + this.orderClicked);
+        return this.orderClicked;
     }
 
     
@@ -106,7 +119,6 @@ class NewGame
        this.startColor = Math.floor(Math.random() * 4);
        this.newColor = 0; 
        this.colorIndex = 0; 
-       this.clickOrder = 0; 
        this.colorBuffer = [this.startColor];
        this.running = false;
 
@@ -115,7 +127,7 @@ class NewGame
        //when game over takes place
        this.gameOver = ()=>
        {
-            $("#simon-says-instructions").text("Game Over");
+            $("#simon-says-instructions").text("Game Over!");
             this.running = false; 
             clearInterval(this.levelUpIntervalID); 
             clearInterval(this.mainGameLoopIntervalID); 
@@ -143,6 +155,7 @@ class NewGame
        //the indicator of what to press
        this.flash = function(x)
        {
+            this.setBoxOrder(x);
             this.allColors[this.colorBuffer[x]].color.addClass("the-flash");
             setTimeout(()=>
             {
@@ -156,11 +169,10 @@ class NewGame
             if(x < this.colorBuffer.length)
             {
                 this.flash(x);
-                this.setBoxOrder(x);
                 this.colorIndex++; 
             }
             else
-            {
+            { 
                 this.colorIndex = 0;
                 this.levelShown = true;
             }  
@@ -169,6 +181,7 @@ class NewGame
         this.resetTheClicks = ()=>
         {
             theClicks = 1; 
+            return theClicks; 
         }
         
        //Did the player win? 
@@ -193,15 +206,12 @@ class NewGame
             for(var x = 0; x < this.allColors.length; x++)
             {
                 this.allColors[x].resetClicks(); 
-                if(x === 0)
-                {
-                    this.resetTheClicks();
-                    this.newColor = this.reroll()
-                    this.colorBuffer.push(this.newColor)
-                    this.level++;
-                    this.colorIndex = 0; 
-                }
             } 
+            theClicks = this.resetTheClicks();
+            this.newColor = this.reroll()
+            this.colorBuffer.push(this.newColor)
+            this.level++;
+            this.colorIndex = 0; 
             this.timer.resetTimer();  
             this.levelShown = false;
        }
