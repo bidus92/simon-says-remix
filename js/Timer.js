@@ -15,7 +15,6 @@ class Timer
             }
             else
             {
-                $("#simon-says-instructions").text("Game Over!");
                 this.hideTimer(); 
                 this.stopTimer();
             }
