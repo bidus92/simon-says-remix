@@ -1,6 +1,6 @@
 var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
 var outOfOrder = false; //global outOfOrder variable
-var allBoxesChecked = false; //global bool that if all boxes are checked then clock stops and alls well; 
+var allBoxesChecked = true; //global bool that if all boxes are checked then clock stops and alls well; 
 
 function TheColor(color, colorIndex) 
 {
@@ -67,6 +67,8 @@ function TheColor(color, colorIndex)
                 console.log("Order Clicked is " + this.orderClicked[x] + " and the order is " + this.order[x]);
                 this.audio = new Audio("../assets/sounds/wrong.mp3");
                 this.playSound();
+                $("body").css("background", "red");
+                $("#simon-says-instructions").css("color", "black");             
                 outOfOrder = true; 
                 console.log("THIS IS OUT OF ORDER!");
                 break; 
@@ -126,6 +128,8 @@ class NewGame
        //when game over takes place
        this.gameOver = ()=>
        {
+            $("body").css("background", "red");
+            $("#simon-says-instructions").css("color", "black");
             $("#simon-says-instructions").text("Game Over!");
             this.timer.hideTimer(); 
             this.running = false; 
@@ -159,10 +163,6 @@ this.checkBoxes = ()=>
             outOfOrder = true; 
             allBoxesChecked = false; 
             break;
-        }
-        else 
-        {
-            allBoxesChecked = true; 
         }
     }
 }

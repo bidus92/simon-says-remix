@@ -9,12 +9,13 @@ class Timer
         {
             this.showTimer(); 
             $("#timer").text("Time Remaining: " + this.timeCount);
-            if(this.timeCount > 0 && !outOfOrder)
+            if(this.timeCount >= 0 && !outOfOrder)
             {
                 this.timeCount--; 
             }
             else
             {
+
                 this.hideTimer(); 
                 this.stopTimer();
             }
@@ -27,7 +28,9 @@ class Timer
 
         this.stopTimer = ()=>
         {
-            this.timesUp = true; 
+            this.timesUp = true;
+            $("#simon-says-instructions").css("color", "black"); 
+            $("#simon-says-instructions").text("Game Over!");
         }
 
         this.hideTimer = ()=>
