@@ -132,7 +132,7 @@ class NewGame
        {
             $("body").css("background", "red");
             $("#simon-says-instructions").css("color", "black");
-            $(".background-simon-says-box").css("color", "black");
+            $(".background-simon-says-box").css("background", "black");
             $("#simon-says-instructions").text("Game Over!");
             this.timer.hideTimer(); 
             this.running = false; 
