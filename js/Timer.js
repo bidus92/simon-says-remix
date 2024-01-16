@@ -29,7 +29,9 @@ class Timer
         this.stopTimer = ()=>
         {
             this.timesUp = true;
+            $("#timer").css("color", "black");
             $("#simon-says-instructions").css("color", "black"); 
+            $(".background-simon-says-box").css("background", "black");
             $("#simon-says-instructions").text("Game Over!");
         }
 

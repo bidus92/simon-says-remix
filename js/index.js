@@ -97,8 +97,10 @@ if(width <= 430)
                 }, "3000"); 
         }
     }); 
+
    $(".press-command-1").text("Tap the screen to continue!");
    $(".press-command-2").text("Tap the screen and good luck!");
+   $("#simon-says-instructions").text("Tap Screen to Play!");
 }
 
 

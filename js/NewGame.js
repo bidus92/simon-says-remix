@@ -68,7 +68,9 @@ function TheColor(color, colorIndex)
                 this.audio = new Audio("../assets/sounds/wrong.mp3");
                 this.playSound();
                 $("body").css("background", "red");
-                $("#simon-says-instructions").css("color", "black");             
+                $("#timer").css("color", "black"); 
+                $("#simon-says-instructions").css("color", "black"); 
+                $(".background-simon-says-box").css("background", "black");            
                 outOfOrder = true; 
                 console.log("THIS IS OUT OF ORDER!");
                 break; 
@@ -130,6 +132,7 @@ class NewGame
        {
             $("body").css("background", "red");
             $("#simon-says-instructions").css("color", "black");
+            $(".background-simon-says-box").css("color", "black");
             $("#simon-says-instructions").text("Game Over!");
             this.timer.hideTimer(); 
             this.running = false; 
