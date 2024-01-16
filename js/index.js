@@ -64,6 +64,39 @@ let width = screen.availWidth;
 
 if(width <= 430)
 {
+    $(document).on("click", function()
+    {
+        switch(enterCount)
+        {
+            case 0: 
+                $("#introduction-box").slideUp();
+                setTimeout(function()
+                {
+                    $("#instruction-box").fadeIn();
+                    enterCount+=1;
+                }, "500");
+            break;
+            case 1: 
+                $("#instruction-box").fadeOut();
+                setTimeout(() =>
+                {
+                    $(".introduction").hide();
+                }, "500");
+                setTimeout(() =>
+                {
+                    $(".simon-says-game").fadeIn();
+                    enterCount+=1;
+                }, "1000");
+            break;
+            case 2: 
+                enterCount+=1;
+                theNewGame.begin();
+                setTimeout(()=>
+                {   
+                    theNewGame.run();
+                }, "3000"); 
+        }
+    }); 
    $(".press-command-1").text("Tap the screen to continue!");
    $(".press-command-2").text("Tap the screen and good luck!");
 }

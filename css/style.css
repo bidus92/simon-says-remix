@@ -88,8 +88,8 @@ h1
     justify-content: center;
     align-content: center;
     background-color: white;
-    width: 200px; 
-    height: 200px;
+    width: 180px; 
+    height: 180px;
     margin-left: 45px;
 }
 
@@ -117,8 +117,8 @@ h1
 
 .simon-says-box
 {
-    width: 185px; 
-    height: 185px; 
+    width: 165px; 
+    height: 165px; 
     align-self: center;
 }
 
