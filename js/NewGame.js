@@ -67,6 +67,7 @@ function TheColor(color, colorIndex)
                 this.playSound();
                 $("body").css("background", "red");
                 $("#timer").css("color", "black"); 
+                $("#simon-says-instructions").text("Game Over!"); 
                 $("#simon-says-instructions").css("color", "black"); 
                 $(".background-simon-says-box").css("background", "black");            
                 outOfOrder = true; 
@@ -233,7 +234,11 @@ class NewGame
        { 
             this.mainGameLoopIntervalID = setInterval(()=>
             {
-                    $("#simon-says-instructions").text("Level " + this.level);
+                    if(!outOfOrder)
+                    {
+                        $("#simon-says-instructions").text("Level " + this.level);
+                    }
+                    
                     if(!this.levelShown)
                     { 
                         this.timer.hideTimer(); 
