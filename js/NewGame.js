@@ -1,6 +1,6 @@
 var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
 var outOfOrder = false; //global outOfOrder variable
-
+var gameIsOver = false; 
 function TheColor(color, colorIndex) 
 {
     this.colorIndex = colorIndex; 
@@ -66,21 +66,36 @@ function TheColor(color, colorIndex)
                 this.audio = new Audio("../assets/sounds/wrong.mp3");
                 this.playSound();
                 $("body").css("background", "red");
+                $("#timer").show(); 
                 $("#timer").css("color", "black"); 
+                $("#timer").text("Press 'enter' to retry!");
                 $("#simon-says-instructions").text("Game Over!"); 
                 $("#simon-says-instructions").css("color", "black"); 
                 $(".background-simon-says-box").css("background", "black");            
                 outOfOrder = true; 
+                gameIsOver = true;
                 console.log("THIS IS OUT OF ORDER!");
                 break; 
             }
+            else
+            {
+                console.log("The order clicked is " + this.orderClicked[x] + " and the order is " + this.order[x])
+            }
+            
         }
     }
     this.resetClicks = ()=>
     {
         this.orderClicked = [];
-        console.log("There are order clicked is reset " + this.orderClicked);
+        console.log("The order clicked is reset ");
         return this.orderClicked;
+    }
+
+    this.resetOrder = ()=>
+    {
+        this.order = []; 
+        console.log("The order is reset ");
+        return this.order; 
     }
 
 
@@ -98,11 +113,18 @@ function TheColor(color, colorIndex)
         }
     }
 
+    this.deactivateAnimation = ()=>
+    {
+        this.color.off("click", this.trackTheClicks);
+        this.color.off("click", this.boxClick);
+    }
+
     this.activateAnimation = ()=>
     {
         this.color.on("click", this.trackTheClicks);
         this.color.on("click", this.boxClick);
     }
+    
 }
 
 class NewGame
@@ -125,17 +147,53 @@ class NewGame
        this.running = false;
        this.newDifficulty = true; 
        //functions!!
+       this.resetColorBuffer = ()=>
+       {
+           this.colorBuffer = [];
+           console.log("Color Buffer Reset")
+           return this.colorBuffer; 
+       }
+
+       this.resetGame = ()=>
+       {
+            if(gameIsOver)
+            {
+                for(var x = 0; x < this.allColors.length; x++)
+                {
+                    this.allColors[x].resetClicks();
+                    this.allColors[x].resetOrder(); 
+                }
+                gameIsOver = false; 
+                outOfOrder = false;
+                theClicks = this.resetTheClicks(); 
+                
+                this.levelShown = false; 
+                this.level = 1; 
+                
+                this.timer.timesUp = false; 
+                this.timer.resetTimer(10);
+
+                this.startColor = this.reroll(); 
+                this.colorBuffer = this.resetColorBuffer(); 
+                this.colorBuffer.push(this.startColor);
+                this.colorIndex = 0; 
+
+
+                $("#timer").css("color", "white");
+                $("body").css("background", "blue");
+                $("#simon-says-instructions").css("color", "white"); 
+                $(".background-simon-says-box").css("background", "white");
+            }
+       }
+
        //when game over takes place
        this.gameOver = ()=>
-       {
-            $("body").css("background", "red");
-            $("#simon-says-instructions").css("color", "black");
-            $(".background-simon-says-box").css("background", "black");
-            $("#simon-says-instructions").text("Game Over!");
-            this.timer.hideTimer(); 
+       { 
+            this.timer.stopTimer(); 
             this.running = false; 
+            gameIsOver = true;
             clearInterval(this.levelUpIntervalID); 
-            clearInterval(this.mainGameLoopIntervalID); 
+            console.log("game over run");
        }
        this.reroll = ()=>
        {
@@ -149,6 +207,7 @@ class NewGame
             if(!this.allColors[this.colorBuffer[x]].order.includes(x + 1))
             {
                 this.allColors[this.colorBuffer[x]].order.push(x + 1); 
+                console.log("the order that has been pushed is pushed to " + this.allColors[(this.colorBuffer[x])]);
             }
         }
 
@@ -234,11 +293,22 @@ class NewGame
        { 
             this.mainGameLoopIntervalID = setInterval(()=>
             {
-                    if(!outOfOrder)
+                    
+                    if(!outOfOrder && !this.timer.timesUp)
                     {
                         $("#simon-says-instructions").text("Level " + this.level);
                     }
-                    
+                    else
+                    {
+                        for(var x = 0; x < this.allColors.length; x++)
+                        {
+                            this.allColors[x].deactivateAnimation(); 
+                        } 
+                        console.log("animations deactivated");
+                        this.gameOver(); 
+                        clearInterval(this.mainGameLoopIntervalID);
+                        return;
+                    }
                     if(!this.levelShown)
                     { 
                         this.timer.hideTimer(); 
@@ -247,19 +317,19 @@ class NewGame
                     else
                     {
                         this.timer.runTimer();
+                        this.levelWon();
                     }
-                    
-                    this.levelWon();
                     //set timeout for timer count
             }, "1000");   
        }
     
        this.begin = function ()
        {
+           this.resetGame(); 
+           this.running = true;
            this.timer.hideTimer(); 
            $("#simon-says-instructions").css({"fontSize": "3rem"});
            $("#simon-says-instructions").text("3");
-           this.running = true;
 
            setTimeout(function ()
            {
@@ -267,6 +337,7 @@ class NewGame
            }, "1000");
            setTimeout(function ()
            { 
+              
                $("#simon-says-instructions").text("1");
            },"2000");
         }
@@ -274,18 +345,15 @@ class NewGame
 
         this.run = function ()
         {
+            for(var x = 0; x < this.allColors.length; x++)
+            {
+                this.allColors[x].activateAnimation();
+                console.log("Reached this point");    
+            }
+
             if(this.running)
             {
                 this.mainGameLoop(); 
-                for(var x = 0; x < this.allColors.length; x++)
-                {
-                    this.allColors[x].activateAnimation();
-                    if(outOfOrder)
-                    {
-                        this.gameOver(); 
-                        break;
-                    }
-                }  
             }
         }
     }

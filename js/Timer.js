@@ -16,7 +16,6 @@ class Timer
             }
             else
             {
-                this.hideTimer(); 
                 this.stopTimer();
             }
         }
@@ -29,11 +28,14 @@ class Timer
         this.stopTimer = ()=>
         {
             this.timesUp = true;
+            gameIsOver = true;
             $("#timer").css("color", "black");
+            $("#timer").text("Press 'enter' to retry!");
             $("body").css("background", "red");
             $("#simon-says-instructions").css("color", "black"); 
             $(".background-simon-says-box").css("background", "black");
             $("#simon-says-instructions").text("Game Over!");
+            return;
             
         }
 

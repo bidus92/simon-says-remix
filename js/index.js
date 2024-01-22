@@ -8,7 +8,7 @@ $("#instruction-box").hide();
 
 
 
-//the enter 
+//the enter count
 var enterCount = 0; 
 
 const theNewGame = new NewGame();
@@ -52,9 +52,18 @@ $(document).on("keydown", function(event)
             setTimeout(()=>
             {   
                 theNewGame.run();
-            }, "3000"); 
+            }, "3000");  
+        default:
+            if(gameIsOver)
+            {
+                theNewGame.begin();
+                setTimeout(()=>
+                {   
+                    theNewGame.run();
+                }, "3000"); 
+            }
     }
-  }  
+}
 });
 
 
@@ -95,6 +104,15 @@ if(width <= 430)
                 {   
                     theNewGame.run();
                 }, "3000"); 
+            default:
+            if(gameIsOver)
+            {
+                theNewGame.begin();
+                setTimeout(()=>
+                {   
+                    theNewGame.run();
+                }, "3000"); 
+            } 
         }
     }); 
 
