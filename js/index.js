@@ -69,7 +69,7 @@ $(document).on("keydown", function(event)
 
 
 //Mobile Switches
-let width = screen.availWidth;
+var width = screen.availWidth;
 
 if(width <= 430)
 {

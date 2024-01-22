@@ -30,7 +30,7 @@ class Timer
             this.timesUp = true;
             gameIsOver = true;
             $("#timer").css("color", "black");
-            $("#timer").text("Press 'enter' to retry!");
+            width <= 430 ? $("#timer").text("Tap Screen to Retry!") : $("#timer").text("Press 'enter' to Retry!");    
             $("body").css("background", "red");
             $("#simon-says-instructions").css("color", "black"); 
             $(".background-simon-says-box").css("background", "black");

@@ -68,7 +68,7 @@ function TheColor(color, colorIndex)
                 $("body").css("background", "red");
                 $("#timer").show(); 
                 $("#timer").css("color", "black"); 
-                $("#timer").text("Press 'enter' to retry!");
+                width <= 430 ? $("#timer").text("Tap Screen to Retry!") : $("#timer").text("Press 'enter' to Retry!"); 
                 $("#simon-says-instructions").text("Game Over!"); 
                 $("#simon-says-instructions").css("color", "black"); 
                 $(".background-simon-says-box").css("background", "black");            
