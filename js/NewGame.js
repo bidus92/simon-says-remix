@@ -29,10 +29,6 @@ function TheColor(color, colorIndex)
         }
     };
     this.audio = this.assignSound(this.colorIndex); 
-    this.playSound = ()=>
-    { 
-           this.audio.play();   
-    };
 
     this.trackTheClicks = ()=>
     { 
@@ -64,7 +60,7 @@ function TheColor(color, colorIndex)
             {
                 console.log("Order Clicked is " + this.orderClicked[x] + " and the order is " + this.order[x]);
                 this.audio = new Audio("../assets/sounds/wrong.mp3");
-                this.playSound();
+                this.audio.play();
                 $("body").css("background", "red");
                 $("#timer").show(); 
                 $("#timer").css("color", "black"); 
@@ -105,7 +101,7 @@ function TheColor(color, colorIndex)
         if(!outOfOrder)
         {
             this.color.addClass("the-press");
-            this.playSound();
+            this.audio.play();
             setTimeout(()=>
             {
                 this.color.removeClass("the-press");  
