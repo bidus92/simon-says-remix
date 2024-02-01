@@ -1,6 +1,7 @@
 var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
 var outOfOrder = false; //global outOfOrder variable
 var gameIsOver = false; 
+var gameOverAudio = new Audio("./assets/sounds/wrong.mp3");
 function TheColor(color, colorIndex) 
 {
     this.colorIndex = colorIndex; 
@@ -60,8 +61,7 @@ function TheColor(color, colorIndex)
             if(this.orderClicked[x] != this.order[x] && !outOfOrder)
             {
                 console.log("Order Clicked is " + this.orderClicked[x] + " and the order is " + this.order[x]);
-                this.audio = new Audio("./assets/sounds/wrong.mp3");
-                this.audio.play();
+                gameOverAudio.play(); 
                 $("body").css("background", "red");
                 $("#timer").show(); 
                 $("#timer").css("color", "black"); 
