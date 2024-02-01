@@ -12,16 +12,16 @@ function TheColor(color, colorIndex)
         switch(colorIndex)
         { 
             case 0:
-                this.audio = new Audio("../assets/sounds/green.mp3");
+                this.audio = new Audio("./assets/sounds/green.mp3");
                 return this.audio; 
             case 1:
-                this.audio = new Audio("../assets/sounds/yellow.mp3");
+                this.audio = new Audio("./assets/sounds/yellow.mp3");
                 return this.audio; 
             case 2:
-                this.audio = new Audio("../assets/sounds/red.mp3");
+                this.audio = new Audio("./assets/sounds/red.mp3");
                 return this.audio; 
             case 3:
-                this.audio = new Audio("../assets/sounds/pink.mp3");
+                this.audio = new Audio("./assets/sounds/pink.mp3");
                 return this.audio; 
             default: 
                 console.log("Ayeee so you code to huh?");
@@ -29,6 +29,7 @@ function TheColor(color, colorIndex)
         }
     };
     this.audio = this.assignSound(this.colorIndex); 
+
 
     this.trackTheClicks = ()=>
     { 
