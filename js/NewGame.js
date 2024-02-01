@@ -60,7 +60,7 @@ function TheColor(color, colorIndex)
             if(this.orderClicked[x] != this.order[x] && !outOfOrder)
             {
                 console.log("Order Clicked is " + this.orderClicked[x] + " and the order is " + this.order[x]);
-                this.audio = new Audio("../assets/sounds/wrong.mp3");
+                this.audio = new Audio("./assets/sounds/wrong.mp3");
                 this.audio.play();
                 $("body").css("background", "red");
                 $("#timer").show(); 
