@@ -7,10 +7,9 @@ $("#instruction-box").hide();
 
 
 
-
 //the enter count
 var enterCount = 0; 
-
+//theGame object itself
 const theNewGame = new NewGame();
 
 
@@ -54,7 +53,7 @@ $(document).on("keydown", function(event)
                 theNewGame.run();
             }, "3000");  
         default:
-            if(gameIsOver)
+            if(theNewGame.gameIsOver)
             {
                 theNewGame.begin();
                 setTimeout(()=>
@@ -69,9 +68,8 @@ $(document).on("keydown", function(event)
 
 
 //Mobile Switches
-var width = screen.availWidth;
 
-if(width <= 430)
+if(theNewGame.screenWidth <= 430)
 {
     $(document).on("click", function()
     {
@@ -105,7 +103,7 @@ if(width <= 430)
                     theNewGame.run();
                 }, "3000"); 
             default:
-            if(gameIsOver)
+            if(theNewGame.gameIsOver)
             {
                 theNewGame.begin();
                 setTimeout(()=>

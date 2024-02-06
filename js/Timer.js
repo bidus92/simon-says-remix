@@ -1,15 +1,15 @@
-
 class Timer
 {
-    constructor()
+    constructor(theGame)
     {
+        this.theGame = theGame;
         this.timeCount = 10; 
         this.timesUp = false; 
         this.runTimer = ()=>
         {
             this.showTimer(); 
             $("#timer").text("Time Remaining: " + this.timeCount);
-            if(this.timeCount >= 0 && !outOfOrder)
+            if(this.timeCount >= 0 && !theGame.outOfOrder)
             {
                 console.log(this.timeCount);
                 this.timeCount--; 
@@ -27,16 +27,15 @@ class Timer
 
         this.stopTimer = ()=>
         {
-            this.timesUp = true;
-            gameIsOver = true;
-            $("#timer").css("color", "black");
-            width <= 430 ? $("#timer").text("Tap Screen to Retry!") : $("#timer").text("Press 'enter' to Retry!");    
-            $("body").css("background", "red");
-            $("#simon-says-instructions").css("color", "black"); 
-            $(".background-simon-says-box").css("background", "black");
-            $("#simon-says-instructions").text("Game Over!");
-            return;
-            
+                this.timesUp = true;
+                theGame.gameIsOver = true;
+                $("#timer").css("color", "black");
+                theGame.screenWidth <= 430 ? $("#timer").text("Tap Screen to Retry!") : $("#timer").text("Press 'enter' to Retry!");    
+                $("body").css("background", "red");
+                $("#simon-says-instructions").css("color", "black"); 
+                $(".background-simon-says-box").css("background", "black");
+                $("#simon-says-instructions").text("Game Over!");
+                return;
         }
 
         this.hideTimer = ()=>

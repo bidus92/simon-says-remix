@@ -1,9 +1,6 @@
-var theClicks = 1; //global variable to track click counter (which will also track order count in effect)
-var outOfOrder = false; //global outOfOrder variable
-var gameIsOver = false; 
-var gameOverAudio = new Audio("./assets/sounds/wrong.mp3");
-function TheColor(color, colorIndex) 
+function TheColor(color, colorIndex, theGame) 
 {
+    this.theGame = theGame;
     this.colorIndex = colorIndex; 
     this.color  = color; //color being highlighted
     this.order = []; //tracks real order of the squares to hit
@@ -34,16 +31,16 @@ function TheColor(color, colorIndex)
 
     this.trackTheClicks = ()=>
     { 
-      if(!outOfOrder)
+      if(!theGame.outOfOrder)
       {
-        console.log("There are currently " + theClicks + " clicks");
-        this.orderClicked.push(theClicks);
+        console.log("There are currently " + theGame.theClicks + " clicks");
+        this.orderClicked.push(theGame.theClicks);
         setTimeout(()=>
         {
-            theClicks++;
+            theGame.theClicks++;
         }, "25");
         
-        console.log("Clicks incremented to " + theClicks + " clicks");
+        console.log("Clicks incremented to " + theGame.theClicks + " clicks");
         setTimeout(()=>
         {
             this.checkTheClick(); 
@@ -58,19 +55,19 @@ function TheColor(color, colorIndex)
     {
         for(var x = 0; x < this.orderClicked.length; x++)
         {
-            if(this.orderClicked[x] != this.order[x] && !outOfOrder)
+            if(this.orderClicked[x] != this.order[x] && !theGame.outOfOrder)
             {
                 console.log("Order Clicked is " + this.orderClicked[x] + " and the order is " + this.order[x]);
-                gameOverAudio.play(); 
+                theGame.gameOverAudio.play(); 
                 $("body").css("background", "red");
                 $("#timer").show(); 
                 $("#timer").css("color", "black"); 
-                width <= 430 ? $("#timer").text("Tap Screen to Retry!") : $("#timer").text("Press 'enter' to Retry!"); 
+                theGame.screenWidth <= 430 ? $("#timer").text("Tap Screen to Retry!") : $("#timer").text("Press 'enter' to Retry!"); 
                 $("#simon-says-instructions").text("Game Over!"); 
                 $("#simon-says-instructions").css("color", "black"); 
                 $(".background-simon-says-box").css("background", "black");            
-                outOfOrder = true; 
-                gameIsOver = true;
+                theGame.outOfOrder = true; 
+                theGame.gameIsOver = true;
                 console.log("THIS IS OUT OF ORDER!");
                 break; 
             }
@@ -99,7 +96,7 @@ function TheColor(color, colorIndex)
     //function that plays out if click event took place 
     this.boxClick = ()=>
     {
-        if(!outOfOrder)
+        if(!theGame.outOfOrder)
         {
             this.color.addClass("the-press");
             this.audio.play();
@@ -128,15 +125,21 @@ class NewGame
 {
     constructor()
     {
+        //FIXING ISSUE OF GLOBALS
+       this.gameOverAudio = new Audio("./assets/sounds/wrong.mp3");
+       this.theClicks = 1;
+       this.outOfOrder = false; //global outOfOrder variable
+       this.gameIsOver = false; 
+       this.screenWidth = screen.availWidth;
        //variables!
        this.levelIntervalID; 
        this.levelUpIntervalID; 
        this.mainGameLoopIntervalID; 
        this.levelShown = false; 
-       this.timer = new Timer(); 
+       this.timer = new Timer(this); 
        this.level = 1; 
        this.colors = $(".simon-says-box");
-       this.allColors = [new TheColor($("#green-box"), 0), new TheColor($("#yellow-box"), 1), new TheColor($("#red-box"), 2), new TheColor($("#pink-box"), 3)];
+       this.allColors = [new TheColor($("#green-box"), 0, this), new TheColor($("#yellow-box"), 1, this), new TheColor($("#red-box"), 2, this), new TheColor($("#pink-box"), 3, this)];
        this.startColor = Math.floor(Math.random() * 4);
        this.newColor = 0; 
        this.colorIndex = 0; 
@@ -153,16 +156,16 @@ class NewGame
 
        this.resetGame = ()=>
        {
-            if(gameIsOver)
+            if(this.gameIsOver)
             {
                 for(var x = 0; x < this.allColors.length; x++)
                 {
                     this.allColors[x].resetClicks();
                     this.allColors[x].resetOrder(); 
                 }
-                gameIsOver = false; 
-                outOfOrder = false;
-                theClicks = this.resetTheClicks(); 
+                this.gameIsOver = false; 
+                this.outOfOrder = false;
+                this.resetTheClicks(); 
                 
                 this.levelShown = false; 
                 this.level = 1; 
@@ -188,7 +191,7 @@ class NewGame
        { 
             this.timer.stopTimer(); 
             this.running = false; 
-            gameIsOver = true;
+            this.gameIsOver = true;
             clearInterval(this.levelUpIntervalID); 
             console.log("game over run");
        }
@@ -211,7 +214,7 @@ class NewGame
 
         this.levelWon = ()=>
         {
-            if(theClicks > this.level && !outOfOrder)
+            if(this.theClicks > this.level && !this.outOfOrder)
             {
                 this.levelUp(); 
             }
@@ -220,10 +223,11 @@ class NewGame
         //the indicator of what to press
         this.flash = function(x)
         {
-            if(!outOfOrder)
+            if(!this.outOfOrder)
             {
                 this.setBoxOrder(x);
                 this.allColors[this.colorBuffer[x]].color.addClass("the-flash");
+                this.allColors[this.colorBuffer[x]].audio.play();
                 setTimeout(()=>
                 {
                     this.allColors[this.colorBuffer[x]].color.removeClass("the-flash");  
@@ -248,8 +252,7 @@ class NewGame
 
         this.resetTheClicks = ()=>
         {
-            theClicks = 1; 
-            return theClicks; 
+            this.theClicks = 1; 
         }
         
 
@@ -271,7 +274,7 @@ class NewGame
             {
                 this.allColors[x].resetClicks(); 
             } 
-            theClicks = this.resetTheClicks();
+            this.resetTheClicks();
             this.newColor = this.reroll()
             this.colorBuffer.push(this.newColor)
             this.level++;
@@ -291,7 +294,7 @@ class NewGame
             this.mainGameLoopIntervalID = setInterval(()=>
             {
                     
-                    if(!outOfOrder && !this.timer.timesUp)
+                    if(!this.outOfOrder && !this.timer.timesUp)
                     {
                         $("#simon-says-instructions").text("Level " + this.level);
                     }
